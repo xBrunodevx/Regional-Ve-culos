@@ -1,10 +1,11 @@
 [build]
   publish = "staticfiles"
-  command = "python manage.py collectstatic --noinput"
+  command = "pip install -r requirements.txt && python manage.py collectstatic --noinput"
 
 [build.environment]
-  PYTHON_VERSION = "3.13"
+  PYTHON_VERSION = "3.11"
   DJANGO_SETTINGS_MODULE = "regional_veiculos.settings"
+  PYTHONPATH = "/opt/buildhome/repo"
 
 [[redirects]]
   from = "/*"
