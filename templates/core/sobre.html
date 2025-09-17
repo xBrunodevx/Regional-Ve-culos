@@ -1,0 +1,223 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Sobre - Regional Veículos{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <!-- História da Empresa -->
+        <div class="row mb-5">
+            <div class="col-12">
+                <h1 class="section-title">Nossa História</h1>
+            </div>
+        </div>
+        
+        <div class="about-content">
+            <div class="about-text">
+                <h2 class="text-danger mb-4">Regional Veículos</h2>
+                <p class="lead">
+                    Há mais de {{ anos_experiencia }} anos no mercado automotivo, a Regional Veículos se consolidou como uma das principais concessionárias da região, oferecendo qualidade, confiança e excelência no atendimento.
+                </p>
+                
+                <p>
+                    Nossa trajetória começou com um sonho simples: conectar pessoas aos seus carros ideais. Desde então, já vendemos mais de {{ carros_vendidos }} veículos e conquistamos a confiança de {{ clientes_satisfeitos }} clientes satisfeitos.
+                </p>
+                
+                <p>
+                    Trabalhamos exclusivamente com veículos novos e seminovos das melhores marcas do mercado, garantindo procedência, qualidade e segurança em cada negociação. Nossa equipe de especialistas está sempre pronta para encontrar a melhor solução para suas necessidades.
+                </p>
+                
+                <p>
+                    Na Regional Veículos, acreditamos que comprar um carro deve ser uma experiência prazerosa e segura. Por isso, oferecemos atendimento personalizado, condições especiais de financiamento e suporte completo antes, durante e após a venda.
+                </p>
+                
+                <div class="mt-4">
+                    <a href="{% url 'core:estoque' %}" class="btn btn-danger btn-lg me-3">
+                        <i class="fas fa-car me-2"></i>Ver Nosso Estoque
+                    </a>
+                    <a href="{% url 'contato:contato' %}" class="btn btn-outline-danger btn-lg">
+                        <i class="fas fa-phone me-2"></i>Fale Conosco
+                    </a>
+                </div>
+            </div>
+            
+            <div class="about-image">
+                {% if imagem_loja and imagem_loja.imagem %}
+                    <img src="{{ imagem_loja.imagem.url }}" alt="{{ imagem_loja.nome }}" class="img-fluid">
+                {% else %}
+                    <img src="{% static 'images/about-us.jpg' %}" alt="Regional Veículos" class="img-fluid">
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Nossos Objetivos -->
+        <div class="row mt-5 mb-4">
+            <div class="col-12">
+                <h2 class="section-title">Nossos Objetivos</h2>
+                <p class="section-subtitle">Conheça os valores que nos guiam todos os dias</p>
+            </div>
+        </div>
+        
+        <div class="objectives-grid">
+            <div class="objective-item">
+                <div class="objective-icon">
+                    <i class="fas fa-handshake"></i>
+                </div>
+                <h4>Confiança</h4>
+                <p>Construímos relacionamentos duradouros baseados na transparência e honestidade em todas as nossas negociações.</p>
+            </div>
+            
+            <div class="objective-item">
+                <div class="objective-icon">
+                    <i class="fas fa-star"></i>
+                </div>
+                <h4>Qualidade</h4>
+                <p>Oferecemos apenas veículos selecionados e revisados, garantindo a melhor experiência para nossos clientes.</p>
+            </div>
+            
+            <div class="objective-item">
+                <div class="objective-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h4>Atendimento</h4>
+                <p>Nossa equipe especializada está sempre pronta para oferecer o melhor atendimento e suporte personalizado.</p>
+            </div>
+            
+            <div class="objective-item">
+                <div class="objective-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h4>Segurança</h4>
+                <p>Todos os nossos veículos passam por rigorosa inspeção e oferecemos garantia para sua tranquilidade.</p>
+            </div>
+            
+            <div class="objective-item">
+                <div class="objective-icon">
+                    <i class="fas fa-hand-holding-usd"></i>
+                </div>
+                <h4>Melhores Preços</h4>
+                <p>Praticamos preços justos e competitivos, sempre buscando a melhor relação custo-benefício do mercado.</p>
+            </div>
+            
+            <div class="objective-item">
+                <div class="objective-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <h4>Agilidade</h4>
+                <p>Processos rápidos e eficientes para que você saia dirigindo seu novo carro o mais rápido possível.</p>
+            </div>
+        </div>
+
+        <!-- Diferenciais -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <h2 class="section-title">Nossos Diferenciais</h2>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="fas fa-certificate text-danger fa-2x me-3"></i>
+                            <h4 class="card-title mb-0">Garantia Estendida</h4>
+                        </div>
+                        <p class="card-text">Todos os nossos veículos seminovos vêm com garantia estendida, oferecendo segurança e tranquilidade para sua compra.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="fas fa-search text-danger fa-2x me-3"></i>
+                            <h4 class="card-title mb-0">Inspeção Completa</h4>
+                        </div>
+                        <p class="card-text">Cada veículo passa por uma inspeção rigorosa de 150 pontos antes de ser disponibilizado para venda.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="fas fa-exchange-alt text-danger fa-2x me-3"></i>
+                            <h4 class="card-title mb-0">Troca Garantida</h4>
+                        </div>
+                        <p class="card-text">Aceite seu veículo usado como parte do pagamento. Avaliamos na hora e oferecemos as melhores condições.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="fas fa-percentage text-danger fa-2x me-3"></i>
+                            <h4 class="card-title mb-0">Financiamento Facilitado</h4>
+                        </div>
+                        <p class="card-text">Parcerias com os principais bancos do país garantem as melhores taxas e condições de financiamento.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Call to Action -->
+        <div class="row mt-5">
+            <div class="col-12 text-center">
+                <div class="cta-section py-5">
+                    <h2 class="cta-title">Venha nos conhecer!</h2>
+                    <p class="cta-subtitle">Estamos prontos para ajudar você a encontrar o carro ideal</p>
+                    <div class="cta-buttons">
+                        <a href="{% url 'contato:contato' %}" class="cta-btn">
+                            <i class="fas fa-map-marker-alt"></i>Como Chegar
+                        </a>
+                        <a href="https://wa.me/5511999999999" target="_blank" class="cta-btn">
+                            <i class="fab fa-whatsapp"></i>WhatsApp
+                        </a>
+                        <a href="{% url 'core:estoque' %}" class="cta-btn">
+                            <i class="fas fa-car"></i>Ver Estoque
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.about-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 4rem;
+    margin-bottom: 4rem;
+}
+
+.about-text {
+    flex: 1;
+}
+
+.about-image {
+    flex: 1;
+}
+
+.about-image img {
+    width: 100%;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+@media (max-width: 768px) {
+    .about-content {
+        flex-direction: column;
+        gap: 2rem;
+    }
+}
+</style>
+{% endblock %}

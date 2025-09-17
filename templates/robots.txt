@@ -1,0 +1,42 @@
+User-agent: *
+Allow: /
+
+# Diretórios importantes
+Allow: /estoque/
+Allow: /contato/
+Allow: /financiamento/
+Allow: /sobre/
+Allow: /carro/
+Allow: /static/css/
+Allow: /static/js/
+Allow: /static/images/
+
+# Bloquear áreas administrativas
+Disallow: /admin/
+Disallow: /static/admin/
+
+# Bloquear duplicatas e parâmetros desnecessários
+Disallow: /*?page=
+Disallow: /*?sort=
+Disallow: /*?order=
+
+# Permitir indexação de media otimizada
+Allow: /media/carros/
+Allow: /media/marcas/
+Allow: /media/site_images/
+
+# Sitemaps
+Sitemap: {{ request.scheme }}://{{ request.get_host }}/sitemap.xml
+
+# Crawl delay para bots
+Crawl-delay: 1
+
+# Configurações específicas para Google
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+# Configurações para Bing
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1

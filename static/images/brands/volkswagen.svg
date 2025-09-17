@@ -1,0 +1,5 @@
+<svg width="120" height="60" xmlns="http://www.w3.org/2000/svg">
+  <rect width="120" height="60" fill="#1E3A8A" rx="5"/>
+  <text x="60" y="30" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="white" text-anchor="middle">VOLKSWAGEN</text>
+  <text x="60" y="45" font-family="Arial, sans-serif" font-size="8" fill="white" text-anchor="middle">Das Auto</text>
+</svg>

@@ -1,0 +1,462 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ carro.marca.nome }} {{ carro.modelo }} {{ carro.ano }} - R$ {{ carro.preco|floatformat:0 }} | Regional Veículos{% endblock %}
+
+{% block description %}{{ carro.marca.nome }} {{ carro.modelo }} {{ carro.ano }} - {{ carro.combustivel }}, {{ carro.quilometragem }} km, {{ carro.transmissao }}. Apenas R$ {{ carro.preco|floatformat:0 }} na Regional Veículos. Financiamento facilitado!{% endblock %}
+
+{% block keywords %}{{ carro.marca.nome }} {{ carro.modelo }}, {{ carro.marca.nome }} {{ carro.ano }}, carro seminovo {{ carro.marca.nome }}, {{ carro.modelo }} usado, financiamento {{ carro.marca.nome }}, Regional Veículos{% endblock %}
+
+{% block og_title %}{{ carro.marca.nome }} {{ carro.modelo }} {{ carro.ano }} - R$ {{ carro.preco|floatformat:0 }}{% endblock %}
+
+{% block og_description %}{{ carro.marca.nome }} {{ carro.modelo }} {{ carro.ano }} em excelente estado! {{ carro.combustivel }}, {{ carro.quilometragem }} km. Financiamento facilitado na Regional Veículos.{% endblock %}
+
+{% block og_type %}product{% endblock %}
+
+{% block og_image %}{% if carro.imagem %}{{ request.scheme }}://{{ request.get_host }}{{ carro.imagem.url }}{% else %}{{ request.scheme }}://{{ request.get_host }}{% static 'images/carro-padrao.jpg' %}{% endif %}{% endblock %}
+
+{% block extra_css %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Vehicle",
+  "name": "{{ carro.marca.nome }} {{ carro.modelo }} {{ carro.ano }}",
+  "description": "{{ carro.marca.nome }} {{ carro.modelo }} {{ carro.ano }} em excelente estado de conservação. {{ carro.combustivel }}, {{ carro.transmissao }}, {{ carro.quilometragem }} quilômetros rodados.",
+  "brand": {
+    "@type": "Brand",
+    "name": "{{ carro.marca.nome }}"
+  },
+  "model": "{{ carro.modelo }}",
+  "vehicleModelDate": "{{ carro.ano }}",
+  "color": "{{ carro.cor }}",
+  "fuelType": "{{ carro.combustivel }}",
+  "vehicleTransmission": "{{ carro.transmissao }}",
+  "mileageFromOdometer": {
+    "@type": "QuantitativeValue",
+    "value": {{ carro.quilometragem }},
+    "unitCode": "KMT"
+  },
+  "offers": {
+    "@type": "Offer",
+    "url": "{{ request.build_absolute_uri }}",
+    "priceCurrency": "BRL",
+    "price": "{{ carro.preco }}",
+    "priceValidUntil": "{% now 'Y-m-d' %}",
+    "availability": "https://schema.org/InStock",
+    "condition": "https://schema.org/UsedCondition",
+    "seller": {
+      "@type": "AutoDealer",
+      "name": "Regional Veículos",
+      "url": "{{ request.scheme }}://{{ request.get_host }}",
+      "telephone": "+55-XX-XXXX-XXXX"
+    },
+    "acceptedPaymentMethod": [
+      {
+        "@type": "PaymentMethod",
+        "@id": "http://purl.org/goodrelations/v1#Cash"
+      },
+      {
+        "@type": "PaymentMethod", 
+        "@id": "http://purl.org/goodrelations/v1#ByBankTransferInAdvance"
+      }
+    ]
+  },
+  "image": [
+    {% if carro.imagem %}"{{ request.scheme }}://{{ request.get_host }}{{ carro.imagem.url }}"{% else %}"{{ request.scheme }}://{{ request.get_host }}{% static 'images/carro-padrao.jpg' %}"{% endif %}
+  ],
+  "vehicleIdentificationNumber": "{{ carro.id }}",
+  "manufacturer": {
+    "@type": "Organization",
+    "name": "{{ carro.marca.nome }}"
+  }
+}
+</script>
+
+<!-- Breadcrumb Schema -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "{{ request.scheme }}://{{ request.get_host }}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Estoque",
+      "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'core:estoque' %}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "{{ carro.marca.nome }} {{ carro.modelo }} {{ carro.ano }}",
+      "item": "{{ request.build_absolute_uri }}"
+    }
+  ]
+}
+</script>
+
+<style>
+.car-gallery .main-image {
+    position: relative;
+    max-height: 400px;
+    overflow: hidden;
+    background-color: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.car-gallery .main-image img {
+    width: 100%;
+    height: 400px;
+    object-fit: contain;
+}
+
+@media (max-width: 768px) {
+    .car-gallery .main-image {
+        max-height: 220px;
+    }
+    .car-gallery .main-image img {
+        height: 180px;
+    }
+    .thumbnail {
+        height: 48px;
+        max-width: 60px;
+    }
+    .car-info {
+        padding: 1rem;
+        border-radius: 10px;
+        top: 0;
+        position: static;
+        margin-bottom: 1.5rem;
+    }
+    .car-title {
+        font-size: 1.2rem;
+    }
+    .car-price {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+    .car-actions .btn {
+        font-size: 1rem;
+        min-width: 100%;
+        padding: 12px 0;
+        height: auto;
+        margin-bottom: 0.7rem;
+    }
+    .car-actions {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 0.5rem;
+    }
+    .car-specifications table td {
+        font-size: 0.98rem;
+        padding: 0.3rem 0;
+    }
+}
+
+.thumbnail {
+    height: 80px;
+    object-fit: contain;
+    cursor: pointer;
+    opacity: 0.7;
+    background-color: #f8f9fa;
+    transition: opacity 0.3s ease;
+}
+
+.thumbnail:hover,
+.thumbnail.active {
+    opacity: 1;
+}
+
+.car-info {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 100px;
+}
+
+.car-title {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.car-price {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+}
+
+.car-specifications table td {
+    padding: 0.5rem 0;
+}
+
+.car-specifications table td:first-child {
+    width: 40%;
+}
+
+/* Botões de Ação Padronizados */
+.car-actions .btn {
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 1.1rem;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    padding: 15px 50px;
+    border-width: 2px;
+    min-width: 180px;
+    max-width: 100%;
+}
+
+.car-actions .btn i {
+    font-size: 1.4rem;
+    margin-right: 8px;
+}
+
+.car-actions .btn-success {
+    background-color: #009952;
+    border-color: #009952;
+    background-size: 200% 100%;
+    transition: all 0.3s ease;
+}
+
+.car-actions .btn-success:hover {
+    background-color: #009952;
+    border-color: #009952fe;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(37, 211, 101, 0.255);
+}
+
+.car-actions .btn-danger {
+    background-color: var(--cor-secundaria);
+    border-color: var(--cor-secundaria);
+    background-size: 200% 100%;
+    transition: all 0.3s ease;
+}
+
+.car-actions .btn-danger:hover {
+    background-color: #009951;
+    border-color: #009952;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(2, 226, 13, 0);
+}
+
+.car-actions .btn-outline-danger {
+    color: var(--cor-secundaria) !important;
+    border-color: var(--cor-secundaria) !important;
+    background: transparent !important;
+    border-width: 2px;
+    background-size: 200% 100%;
+    transition: all 0.3s ease;
+}
+
+.car-actions .btn-outline-danger i {
+    color: var(--cor-secundaria) !important;
+}
+
+.car-actions .btn-outline-danger:hover {
+    background-color: #009951;
+    border-color: #009952;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(2, 226, 13, 0.333);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container" 
+         data-car-info 
+         data-car-id="{{ carro.id }}" 
+         data-car-brand="{{ carro.marca.nome }}" 
+         data-car-model="{{ carro.modelo }}" 
+         data-car-year="{{ carro.ano }}" 
+         data-car-price="{{ carro.preco }}">
+        
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'core:home' %}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'core:estoque' %}">Estoque</a></li>
+                <li class="breadcrumb-item active">{{ carro.marca.nome }} {{ carro.modelo }}</li>
+            </ol>
+        </nav>
+
+        <div class="row">
+            <!-- Galeria de Imagens -->
+            <div class="col-lg-8">
+                <div class="car-gallery">
+                    <div class="main-image mb-3">
+                        {% if carro.imagem_principal %}
+                            <img src="{{ carro.imagem_principal.url }}" alt="{{ carro.modelo }}" class="img-fluid rounded" id="mainImage">
+                        {% else %}
+                            <img src="{% static 'images/imgcar.jpg' %}" alt="{{ carro.modelo }}" class="img-fluid rounded" id="mainImage">
+                        {% endif %}
+                        <div class="car-badge badge-{{ carro.condicao }} position-absolute" style="top: 15px; left: 15px;">
+                            {{ carro.get_condicao_display }}
+                        </div>
+                    </div>
+                    
+                    {% if carro.get_outras_imagens %}
+                    <div class="thumbnail-images">
+                        <div class="row">
+                            <div class="col-3">
+                                {% if carro.imagem_principal %}
+                                    <img src="{{ carro.imagem_principal.url }}" alt="{{ carro.modelo }}" 
+                                         class="img-fluid rounded thumbnail active" onclick="changeImage(this.src)">
+                                {% else %}
+                                    <img src="{% static 'images/imgcar.jpg' %}" alt="{{ carro.modelo }}" 
+                                         class="img-fluid rounded thumbnail active" onclick="changeImage(this.src)">
+                                {% endif %}
+                            </div>
+                            {% for imagem in carro.get_outras_imagens %}
+                            <div class="col-3">
+                                <img src="{{ imagem.url }}" alt="{{ carro.modelo }}" 
+                                     class="img-fluid rounded thumbnail" onclick="changeImage(this.src)">
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Informações do Carro -->
+            <div class="col-lg-4">
+                <div class="car-info">
+                    <h1 class="car-title">{{ carro.fabricante }} {{ carro.modelo }}</h1>
+                    <div class="car-price text-danger">{{ carro.get_preco_formatado }}</div>
+                    
+                    <div class="car-specifications mt-4">
+                        <h5>Especificações</h5>
+                        <table class="table table-borderless">
+                            <tr>
+                                <td><i class="fas fa-calendar text-danger"></i> Ano:</td>
+                                <td><strong>{{ carro.ano }}</strong></td>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-palette text-danger"></i> Cor:</td>
+                                <td><strong>{{ carro.cor }}</strong></td>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-road text-danger"></i> Quilometragem:</td>
+                                <td><strong>{{ carro.quilometragem|floatformat:0 }} km</strong></td>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-gas-pump text-danger"></i> Combustível:</td>
+                                <td><strong>{{ carro.combustivel }}</strong></td>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-cogs text-danger"></i> Câmbio:</td>
+                                <td><strong>{{ carro.cambio }}</strong></td>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-engine text-danger"></i> Motor:</td>
+                                <td><strong>{{ carro.motor }}</strong></td>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-check-circle text-danger"></i> Condição:</td>
+                                <td><strong>{{ carro.get_condicao_display }}</strong></td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- Ações -->
+                    <div class="car-actions mt-4">
+                        <a href="https://wa.me/5511999999999?text=Tenho interesse no {{ carro.fabricante }} {{ carro.modelo }} {{ carro.ano }}" 
+                           target="_blank" class="btn btn-success btn-lg w-100 mb-3">
+                            <i class="fab fa-whatsapp me-2"></i>WhatsApp
+                        </a>
+                        <a href="{% url 'contato:financiamento_carro' carro.pk %}" class="btn btn-danger btn-lg w-100 mb-3">
+                            <i class="fas fa-calculator me-2"></i>Financiamento
+                        </a>
+                        <a href="{% url 'contato:contato' %}" class="btn btn-outline-danger btn-lg w-100">
+                            <i class="fas fa-envelope me-2"></i>Contato
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Descrição Detalhada -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title">Descrição do Veículo</h3>
+                        <p class="card-text">{{ carro.descricao|linebreaks }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Carros Relacionados -->
+        {% if carros_relacionados %}
+        <div class="row mt-5">
+            <div class="col-12">
+                <h3 class="section-title">Outros {{ carro.fabricante }}</h3>
+                <div class="row">
+                    {% for carro_relacionado in carros_relacionados %}
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="car-card">
+                            <div class="car-image">
+                                {% if carro_relacionado.imagem_principal %}
+                                    <img src="{{ carro_relacionado.imagem_principal.url }}" alt="{{ carro_relacionado.modelo }}" class="img-fluid">
+                                {% else %}
+                                    <img src="{% static 'images/imgcar.jpg' %}" alt="{{ carro_relacionado.modelo }}" class="img-fluid">
+                                {% endif %}
+                                <div class="car-badge badge-{{ carro_relacionado.condicao }}">
+                                    {{ carro_relacionado.get_condicao_display }}
+                                </div>
+                            </div>
+                            <div class="car-content">
+                                <h4 class="car-title">{{ carro_relacionado.fabricante }} {{ carro_relacionado.modelo }}</h4>
+                                <div class="car-price">{{ carro_relacionado.get_preco_formatado }}</div>
+                                <ul class="car-details">
+                                    <li><i class="fas fa-calendar"></i>{{ carro_relacionado.ano }}</li>
+                                    <li><i class="fas fa-road"></i>{{ carro_relacionado.quilometragem|floatformat:0 }} km</li>
+                                </ul>
+                                <div class="car-actions">
+                                    <a href="{% url 'core:detalhe_carro' carro_relacionado.pk %}" class="btn-custom btn-primary-custom">
+                                        <i class="fas fa-eye me-1"></i>Ver Detalhes
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function changeImage(src) {
+    document.getElementById('mainImage').src = src;
+    
+    // Remove active class from all thumbnails
+    document.querySelectorAll('.thumbnail').forEach(thumb => {
+        thumb.classList.remove('active');
+    });
+    
+    // Add active class to clicked thumbnail
+    event.target.classList.add('active');
+}
+</script>
+{% endblock %}

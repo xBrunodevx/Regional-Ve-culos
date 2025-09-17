@@ -1,0 +1,202 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Regional Veículos - Carros Seminovos com Qualidade e Garantia{% endblock %}
+
+{% block description %}Encontre o carro ideal na Regional Veículos. Seminovos selecionados, financiamento facilitado e garantia. Tradição em automóveis desde 1995.{% endblock %}
+
+{% block keywords %}carros seminovos, carros usados, financiamento veículos, concessionária, automóveis, são paulo{% endblock %}
+
+{% block content %}
+<!-- Hero Banner Section -->
+<section class="hero-banner">
+    <div class="container">
+        <div class="row align-items-center min-vh-100">
+            <div class="col-lg-6">
+                <div class="hero-content">
+                    <h1 class="typewriter-text display-4 fw-bold text-white mb-4">
+                        Encontre o carro perfeito para você
+                    </h1>
+                    <p class="lead text-white mb-4">
+                        Seminovos selecionados com garantia, procedência e as melhores condições de financiamento do mercado.
+                    </p>
+                    <div class="hero-buttons">
+                        <a href="{% url 'core:estoque' %}" class="btn btn-primary btn-lg me-3 mb-3">
+                            <i class="fas fa-car me-2"></i>Ver Estoque
+                        </a>
+                        <a href="{% url 'contato:financiamento' %}" class="btn btn-outline-light btn-lg mb-3">
+                            <i class="fas fa-calculator me-2"></i>Simular Financiamento
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6">
+                <div class="hero-image">
+                    <img src="{% static 'images/hero-car.jpg' %}" alt="Carros seminovos Regional Veículos" class="img-fluid rounded shadow">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features-section py-5">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col-12">
+                <h2 class="section-title">Por que escolher a Regional Veículos?</h2>
+                <p class="section-subtitle">Tradição e confiança no mercado de seminovos</p>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h4>Garantia Estendida</h4>
+                    <p>Todos os nossos veículos possuem garantia estendida para sua tranquilidade e segurança.</p>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h4>Veículos Vistoriados</h4>
+                    <p>Rigorosa vistoria técnica em todos os carros antes de chegarem ao nosso estoque.</p>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-percentage"></i>
+                    </div>
+                    <h4>Financiamento Facilitado</h4>
+                    <p>Parcelamento em até 60x com as menores taxas do mercado. Aprovação rápida.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Cars Section -->
+<section class="featured-cars py-5 bg-light">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col-12">
+                <h2 class="section-title">Carros em Destaque</h2>
+                <p class="section-subtitle">Confira alguns dos nossos melhores seminovos</p>
+            </div>
+        </div>
+        
+        <div class="row">
+            {% for carro in carros_destaque %}
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="car-card">
+                    <div class="car-image">
+                        {% if carro.imagem %}
+                            <img src="{{ carro.imagem.url }}" alt="{{ carro.marca }} {{ carro.modelo }}" class="img-fluid">
+                        {% else %}
+                            <img src="{% static 'images/placeholder-car.jpg' %}" alt="{{ carro.marca }} {{ carro.modelo }}" class="img-fluid">
+                        {% endif %}
+                        
+                        <div class="car-overlay">
+                            <a href="{% url 'core:detalhe_carro' carro.id %}" class="btn btn-primary">
+                                <i class="fas fa-eye me-2"></i>Ver Detalhes
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="car-info">
+                        <h5>{{ carro.marca }} {{ carro.modelo }}</h5>
+                        <p class="car-details">
+                            <i class="fas fa-calendar me-1"></i>{{ carro.ano }}
+                            <span class="mx-2">|</span>
+                            <i class="fas fa-tachometer-alt me-1"></i>{{ carro.km_formatado }}
+                        </p>
+                        <div class="car-price">
+                            <span class="price">{{ carro.preco_formatado }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center">
+                <p class="text-muted">Nenhum carro encontrado no momento.</p>
+                <a href="{% url 'contato:contato' %}" class="btn btn-primary">Entre em Contato</a>
+            </div>
+            {% endfor %}
+        </div>
+        
+        {% if carros_destaque %}
+        <div class="row">
+            <div class="col-12 text-center">
+                <a href="{% url 'core:estoque' %}" class="btn btn-outline-primary btn-lg">
+                    <i class="fas fa-car me-2"></i>Ver Estoque Completo
+                </a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Statistics Section -->
+<section class="statistics-section py-5">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-item">
+                    <div class="stat-number">500+</div>
+                    <div class="stat-label">Carros Vendidos</div>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-item">
+                    <div class="stat-number">25+</div>
+                    <div class="stat-label">Anos de Experiência</div>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-item">
+                    <div class="stat-number">98%</div>
+                    <div class="stat-label">Clientes Satisfeitos</div>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-item">
+                    <div class="stat-number">30+</div>
+                    <div class="stat-label">Marcas Disponíveis</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2 class="text-white mb-3">Pronto para encontrar seu próximo carro?</h2>
+                <p class="text-white mb-4">Entre em contato conosco e descubra as melhores oportunidades</p>
+                <div class="cta-buttons">
+                    <a href="{% url 'contato:contato' %}" class="btn btn-light btn-lg me-3">
+                        <i class="fas fa-phone me-2"></i>Falar com Vendedor
+                    </a>
+                    <a href="{% url 'contato:financiamento' %}" class="btn btn-outline-light btn-lg">
+                        <i class="fas fa-calculator me-2"></i>Simular Financiamento
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

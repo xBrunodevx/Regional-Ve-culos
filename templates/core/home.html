@@ -1,0 +1,377 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Regional Veículos - Carros Seminovos com Qualidade | Financiamento Facilitado{% endblock %}
+
+{% block description %}Regional Veículos - Sua melhor opção em carros seminovos! Amplo estoque, financiamento facilitado, garantia e as melhores condições. Encontre o carro dos seus sonhos aqui!{% endblock %}
+
+{% block keywords %}carros seminovos, carros usados, financiamento de veículos, concessionária, automóveis, comprar carro, Regional Veículos, carros com garantia, financiamento sem entrada, carros revisados{% endblock %}
+
+{% block og_title %}Regional Veículos - Carros Seminovos com Qualidade e Garantia{% endblock %}
+
+{% block og_description %}Encontre o carro perfeito na Regional Veículos! Carros seminovos selecionados, financiamento facilitado, garantia e condições especiais. Visite nossa concessionária!{% endblock %}
+
+{% block extra_css %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "AutoDealer",
+  "name": "Regional Veículos",
+  "description": "Concessionária especializada em carros seminovos com qualidade garantida e financiamento facilitado",
+  "url": "{{ request.build_absolute_uri }}",
+  "telephone": "+55-XX-XXXX-XXXX",
+  "email": "contato@regionalveiculos.com.br",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Rua Principal, 123",
+    "addressLocality": "Cidade",
+    "addressRegion": "Estado",
+    "postalCode": "12345-678",
+    "addressCountry": "BR"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": -23.5505,
+    "longitude": -46.6333
+  },
+  "openingHours": [
+    "Mo-Fr 08:00-18:00",
+    "Sa 08:00-16:00"
+  ],
+  "paymentAccepted": ["Cash", "Credit Card", "Financing"],
+  "priceRange": "$$",
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Carros Seminovos",
+    "itemListElement": [
+      {% for carro in carros_destaque %}
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Vehicle",
+          "name": "{{ carro.marca.nome }} {{ carro.modelo }}",
+          "brand": "{{ carro.marca.nome }}",
+          "model": "{{ carro.modelo }}",
+          "vehicleModelDate": "{{ carro.ano }}",
+          "fuelType": "{{ carro.combustivel }}",
+          "vehicleTransmission": "{{ carro.transmissao }}",
+          "mileageFromOdometer": {
+            "@type": "QuantitativeValue",
+            "value": {{ carro.quilometragem }},
+            "unitCode": "KMT"
+          },
+          "color": "{{ carro.cor }}"
+        },
+        "price": "{{ carro.preco }}",
+        "priceCurrency": "BRL",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "AutoDealer",
+          "name": "Regional Veículos"
+        }
+      }{% if not forloop.last %},{% endif %}
+      {% endfor %}
+    ]
+  }
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <!-- Texto de Impacto com Animação de Máquina de Escrever -->
+    <div class="hero-impact-text text-center text-md-start px-2 px-md-0">
+        <h1 class="typewriter-text" id="typewriterText"></h1>
+    </div>
+    <!-- Botões de Contato sobre o Banner -->
+    <div class="bottom-contact-buttons d-flex flex-column flex-sm-row align-items-center justify-content-center gap-2 gap-sm-4 mt-3 mt-md-0">
+        <a href="{% url 'contato:contato' %}" class="contact-btn contact-btn-primary w-100 w-sm-auto mb-2 mb-sm-0">
+            <i class="fas fa-phone me-2"></i>CONTATO
+        </a>
+        <a href="https://wa.me/5511999999999" target="_blank" class="contact-btn contact-btn-whatsapp w-100 w-sm-auto">
+            <i class="fab fa-whatsapp me-2"></i>WHATSAPP
+        </a>
+    </div>
+</section>
+
+<!-- Seção Carro em Destaque -->
+<section class="featured-car-section py-5">
+    <div class="container">
+        <div class="row align-items-center flex-column-reverse flex-lg-row text-center text-lg-start">
+            <div class="col-12 col-lg-6 mt-4 mt-lg-0">
+                <div class="featured-content">
+                    <h2 class="featured-title-typewriter mb-4">Realize seu sonho hoje!</h2>
+                    <p class="featured-text-animated mb-4">
+                        Explore nosso estoque completo com os melhores carros do mercado. 
+                        Temos opções para todos os gostos e bolsos, com financiamento facilitado.
+                    </p>
+                    <div class="d-flex flex-column flex-sm-row gap-2 gap-sm-3 flex-wrap justify-content-center justify-content-lg-start">
+                        <a href="{% url 'core:estoque' %}" class="btn btn-danger btn-lg w-100 w-sm-auto mb-2 mb-sm-0">
+                            <i class="fas fa-car me-2"></i>Ver Estoque
+                        </a>
+                        <a href="{% url 'contato:financiamento' %}" class="btn btn-outline-success btn-lg w-100 w-sm-auto">
+                            <i class="fas fa-calculator me-2"></i>Simular Financiamento
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-6 mb-4 mb-lg-0 d-flex justify-content-center align-items-center">
+                <!-- Carro Flutuante Simples -->
+                <div class="simple-floating-car w-100" style="max-width: 400px;">
+                    {% if carro_flutuante and carro_flutuante.imagem %}
+                        <img src="{{ carro_flutuante.imagem.url }}" alt="{{ carro_flutuante.nome }}" class="img-fluid floating-car-image mx-auto">
+                    {% else %}
+                        <img src="{% static 'images/imgcar.jpg' %}" alt="Carro em Destaque" class="img-fluid floating-car-image mx-auto">
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Seção de Marcas -->
+<section class="brands-carousel">
+    <div class="container">
+        <h3 class="text-center mb-4">Trabalhamos com as melhores marcas</h3>
+        <div class="brands-container px-2 px-md-0">
+            <div class="brands-track d-flex flex-row flex-nowrap align-items-center" id="brandsTrack">
+                {% if marcas %}
+                    <!-- Primeira passagem das marcas dinâmicas -->
+                    {% for marca in marcas %}
+                    <div class="brand-item">
+                        {% if marca.logo %}
+                            <img src="{{ marca.logo.url }}" alt="{{ marca.nome }}" class="img-fluid">
+                        {% else %}
+                            <img src="{% static 'images/brands/'|add:marca.nome|lower|add:'.svg' %}" alt="{{ marca.nome }}" class="img-fluid">
+                        {% endif %}
+                        <p class="brand-name mt-2">{{ marca.nome }}</p>
+                    </div>
+                    {% endfor %}
+                    
+                    <!-- Duplicar marcas para efeito infinito -->
+                    {% for marca in marcas %}
+                    <div class="brand-item">
+                        {% if marca.logo %}
+                            <img src="{{ marca.logo.url }}" alt="{{ marca.nome }}" class="img-fluid">
+                        {% else %}
+                            <img src="{% static 'images/brands/'|add:marca.nome|lower|add:'.svg' %}" alt="{{ marca.nome }}" class="img-fluid">
+                        {% endif %}
+                        <p class="brand-name mt-2">{{ marca.nome }}</p>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <!-- Marcas padrão caso não haja marcas cadastradas -->
+                    <div class="brand-item">
+                        <img src="{% static 'images/brands/toyota.svg' %}" alt="Toyota" class="img-fluid">
+                        <p class="brand-name mt-2">Toyota</p>
+                    </div>
+                    <div class="brand-item">
+                        <img src="{% static 'images/brands/honda.svg' %}" alt="Honda" class="img-fluid">
+                        <p class="brand-name mt-2">Honda</p>
+                    </div>
+                    <div class="brand-item">
+                        <img src="{% static 'images/brands/ford.svg' %}" alt="Ford" class="img-fluid">
+                        <p class="brand-name mt-2">Ford</p>
+                    </div>
+                    <div class="brand-item">
+                        <img src="{% static 'images/brands/chevrolet.svg' %}" alt="Chevrolet" class="img-fluid">
+                        <p class="brand-name mt-2">Chevrolet</p>
+                    </div>
+                    <div class="brand-item">
+                        <img src="{% static 'images/brands/volkswagen.svg' %}" alt="Volkswagen" class="img-fluid">
+                        <p class="brand-name mt-2">Volkswagen</p>
+                    </div>
+                    <div class="brand-item">
+                        <img src="{% static 'images/brands/hyundai.svg' %}" alt="Hyundai" class="img-fluid">
+                        <p class="brand-name mt-2">Hyundai</p>
+                    </div>
+                    
+                    <!-- Duplicar marcas padrão para efeito infinito -->
+                    <div class="brand-item">
+                        <img src="{% static 'images/brands/toyota.svg' %}" alt="Toyota" class="img-fluid">
+                        <p class="brand-name mt-2">Toyota</p>
+                    </div>
+                    <div class="brand-item">
+                        <img src="{% static 'images/brands/honda.svg' %}" alt="Honda" class="img-fluid">
+                        <p class="brand-name mt-2">Honda</p>
+                    </div>
+                    <div class="brand-item">
+                        <img src="{% static 'images/brands/ford.svg' %}" alt="Ford" class="img-fluid">
+                        <p class="brand-name mt-2">Ford</p>
+                    </div>
+                    <div class="brand-item">
+                        <img src="{% static 'images/brands/chevrolet.svg' %}" alt="Chevrolet" class="img-fluid">
+                        <p class="brand-name mt-2">Chevrolet</p>
+                    </div>
+                    <div class="brand-item">
+                        <img src="{% static 'images/brands/volkswagen.svg' %}" alt="Volkswagen" class="img-fluid">
+                        <p class="brand-name mt-2">Volkswagen</p>
+                    </div>
+                    <div class="brand-item">
+                        <img src="{% static 'images/brands/hyundai.svg' %}" alt="Hyundai" class="img-fluid">
+                        <p class="brand-name mt-2">Hyundai</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Números de Destaque -->
+<section class="stats-section">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-12 col-md-4 mb-4 mb-md-0">
+                <div class="stat-item">
+                    <span class="stat-number" data-target="{{ anos_experiencia }}">{{ anos_experiencia }}</span>
+                    <div class="stat-label">Anos de Experiência</div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 mb-4 mb-md-0">
+                <div class="stat-item">
+                    <span class="stat-number" data-target="{{ total_carros }}">{{ total_carros }}</span>
+                    <div class="stat-label">Carros Disponíveis</div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4">
+                <div class="stat-item">
+                    <span class="stat-number" data-target="{{ clientes_satisfeitos }}">{{ clientes_satisfeitos }}</span>
+                    <div class="stat-label">Clientes Satisfeitos</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Carros em Destaque -->
+<section class="section" id="carros-destaque">
+    <div class="container">
+        <h2 class="section-title">Carros em Destaque</h2>
+        <p class="section-subtitle">Confira nossa seleção especial de veículos</p>
+        
+        <div class="row">
+            {% for carro in carros_destaque %}
+            <div class="col-12 col-md-6 col-lg-4 mb-4 d-flex align-items-stretch">
+                <div class="car-card w-100 h-100 d-flex flex-column">
+                    <div class="car-image text-center">
+                        {% if carro.imagem_principal %}
+                            <img src="{{ carro.imagem_principal.url }}" alt="{{ carro.modelo }}" class="img-fluid w-100" style="max-height:220px;object-fit:cover;">
+                        {% else %}
+                            <img src="{% static 'images/imgcar.jpg' %}" alt="{{ carro.modelo }}" class="img-fluid w-100" style="max-height:220px;object-fit:cover;">
+                        {% endif %}
+                        <div class="car-badge badge-{{ carro.condicao }}">
+                            {{ carro.get_condicao_display }}
+                        </div>
+                    </div>
+                    <div class="car-content flex-grow-1 d-flex flex-column justify-content-between">
+                        <h4 class="car-title">{{ carro.fabricante }} {{ carro.modelo }}</h4>
+                        <div class="car-price">{{ carro.get_preco_formatado }}</div>
+                        <ul class="car-details">
+                            <li><i class="fas fa-calendar"></i>{{ carro.ano }}</li>
+                            <li><i class="fas fa-palette"></i>{{ carro.cor }}</li>
+                            <li><i class="fas fa-road"></i>{{ carro.quilometragem|floatformat:0 }} km</li>
+                            <li><i class="fas fa-gas-pump"></i>{{ carro.combustivel }}</li>
+                        </ul>
+                        <div class="car-actions d-flex flex-column flex-sm-row gap-2 mt-2">
+                            <a href="{% url 'core:detalhe_carro' carro.pk %}" class="btn-custom btn-primary-custom w-100 w-sm-auto">
+                                <i class="fas fa-eye me-1"></i>Saiba Mais
+                            </a>
+                            <a href="https://wa.me/5547984660532?text=Tenho interesse no {{ carro.fabricante }} {{ carro.modelo }}" 
+                               target="_blank" class="btn-custom btn-outline-custom w-100 w-sm-auto">
+                                <i class="fab fa-whatsapp me-1"></i>WhatsApp
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center">
+                <p class="text-muted">Nenhum carro em destaque no momento.</p>
+            </div>
+            {% endfor %}
+        </div>
+        
+        {% if carros_destaque %}
+        <div class="text-center mt-4">
+            <a href="{% url 'core:estoque' %}" class="btn btn-danger btn-lg">
+                <i class="fas fa-car me-2"></i>Ver Todo o Estoque
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+    <div class="container">
+        <h2 class="cta-title">Pronto para encontrar seu carro ideal?</h2>
+        <p class="cta-subtitle">Fale com nossos especialistas e descubra as melhores condições de pagamento</p>
+        
+        <div class="cta-buttons">
+            <a href="https://wa.me/5511999999999?text=Olá! Gostaria de saber mais sobre os carros disponíveis." 
+               target="_blank" class="cta-btn">
+                <i class="fab fa-whatsapp"></i>Falar no WhatsApp
+            </a>
+            <a href="mailto:vendas@regionalveiculos.com.br" class="cta-btn">
+                <i class="fas fa-envelope"></i>Enviar E-mail
+            </a>
+            <a href="{% url 'contato:contato' %}" class="cta-btn">
+                <i class="fas fa-phone"></i>Solicitar Contato
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Definir atributo da página para JS específico
+    document.body.setAttribute('data-page', 'home');
+    
+    // Animação de Máquina de Escrever
+    const texts = [
+        'Encontre o carro dos seus sonhos!',
+        'Qualidade garantida em cada veículo.',
+        'Financiamento facilitado para você!',
+        'Sua confiança é nossa prioridade.'
+    ];
+    
+    const typewriterElement = document.getElementById('typewriterText');
+    let textIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+    let typeSpeed = 100;
+    
+    function typeWriter() {
+        const currentText = texts[textIndex];
+        
+        if (isDeleting) {
+            typewriterElement.textContent = currentText.substring(0, charIndex - 1);
+            charIndex--;
+            typeSpeed = 50;
+        } else {
+            typewriterElement.textContent = currentText.substring(0, charIndex + 1);
+            charIndex++;
+            typeSpeed = 100;
+        }
+        
+        if (!isDeleting && charIndex === currentText.length) {
+            // Pausa no final do texto
+            typeSpeed = 2000;
+            isDeleting = true;
+        } else if (isDeleting && charIndex === 0) {
+            isDeleting = false;
+            textIndex = (textIndex + 1) % texts.length;
+            typeSpeed = 500;
+        }
+        
+        setTimeout(typeWriter, typeSpeed);
+    }
+    
+    // Iniciar a animação
+    typeWriter();
+});
+</script>
+{% endblock %}

@@ -1,0 +1,606 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}Solicitar Financiamento - Regional Veículos{% endblock %}
+
+{% block content %}
+<section class="section" data-page="financiamento">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="section-title">Solicitar Financiamento</h1>
+                <p class="section-subtitle">Preencha os dados abaixo para simular seu financiamento</p>
+            </div>
+        </div>
+
+        {% if carro %}
+        <!-- Informações do Carro Selecionado -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="alert alert-info">
+                    <div class="row align-items-center">
+                        <div class="col-12 col-md-3 mb-3 mb-md-0 text-center">
+                            {% if carro.imagem_principal %}
+                                <img src="{{ carro.imagem_principal.url }}" alt="{{ carro.modelo }}" class="img-fluid rounded" style="max-width: 120px;">
+                            {% else %}
+                                <img src="{% static 'images/imgcar.jpg' %}" alt="{{ carro.modelo }}" class="img-fluid rounded" style="max-width: 120px;">
+                            {% endif %}
+                        </div>
+                        <div class="col-12 col-md-9 text-center text-md-start">
+                            <h4 class="alert-heading">Carro Selecionado</h4>
+                            <h5>{{ carro.fabricante }} {{ carro.modelo }} {{ carro.ano }}</h5>
+                            <p class="mb-2"><strong>Preço:</strong> {{ carro.get_preco_formatado }}</p>
+                            <p class="mb-2"><strong>Condição:</strong> {{ carro.get_condicao_display }}</p>
+                            <p class="mb-0">{{ carro.quilometragem|floatformat:0 }} km • {{ carro.combustivel }} • {{ carro.cor }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-body">
+                        <form method="post" class="needs-validation financiamento-form" novalidate>
+                            {% csrf_token %}
+                            
+                            <!-- Exibir Erros do Formulário -->
+                            {% if form.errors %}
+                                <div class="alert alert-danger" role="alert">
+                                    <h5 class="alert-heading">
+                                        <i class="fas fa-exclamation-triangle me-2"></i>Por favor, corrija os erros abaixo:
+                                    </h5>
+                                    {% for field, errors in form.errors.items %}
+                                        <strong>{{ field }}:</strong>
+                                        {% for error in errors %}
+                                            <div>• {{ error }}</div>
+                                        {% endfor %}
+                                    {% endfor %}
+                                    {% if form.non_field_errors %}
+                                        {% for error in form.non_field_errors %}
+                                            <div><strong>Erro geral:</strong> {{ error }}</div>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                            
+                            <!-- Dados Pessoais -->
+                            <div class="form-section mb-4">
+                                <h4 class="text-danger mb-3">
+                                    <i class="fas fa-user me-2"></i>Dados Pessoais
+                                </h4>
+                                
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        {{ form.nome.label_tag }}
+                                        {{ form.nome }}
+                                        {% if form.nome.errors %}
+                                            <div class="text-danger">
+                                                {% for error in form.nome.errors %}
+                                                    <small>{{ error }}</small><br>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        {{ form.email.label_tag }}
+                                        {{ form.email }}
+                                        {% if form.email.errors %}
+                                            <div class="text-danger">
+                                                {% for error in form.email.errors %}
+                                                    <small>{{ error }}</small><br>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        {{ form.telefone.label_tag }}
+                                        {{ form.telefone }}
+                                        {% if form.telefone.errors %}
+                                            <div class="text-danger">
+                                                {% for error in form.telefone.errors %}
+                                                    <small>{{ error }}</small><br>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        {{ form.cpf.label_tag }}
+                                        {{ form.cpf }}
+                                        {% if form.cpf.errors %}
+                                            <div class="text-danger">
+                                                {% for error in form.cpf.errors %}
+                                                    <small>{{ error }}</small><br>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Dados Financeiros -->
+                            <div class="form-section mb-4">
+                                <h4 class="text-danger mb-3">
+                                    <i class="fas fa-dollar-sign me-2"></i>Dados Financeiros
+                                </h4>
+                                
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        {{ form.renda_mensal.label_tag }}
+                                        {{ form.renda_mensal }}
+                                        {% if form.renda_mensal.errors %}
+                                            <div class="text-danger">
+                                                {% for error in form.renda_mensal.errors %}
+                                                    <small>{{ error }}</small><br>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        {{ form.profissao.label_tag }}
+                                        {{ form.profissao }}
+                                        {% if form.profissao.errors %}
+                                            <div class="text-danger">
+                                                {% for error in form.profissao.errors %}
+                                                    <small>{{ error }}</small><br>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        {{ form.entrada.label_tag }}
+                                        {{ form.entrada }}
+                                        {% if form.entrada.errors %}
+                                            <div class="text-danger">
+                                                {% for error in form.entrada.errors %}
+                                                    <small>{{ error }}</small><br>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                        <div class="form-text">Valor que pretende dar de entrada (opcional)</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Carro de Interesse -->
+                            <div class="form-section mb-4">
+                                <h4 class="text-danger mb-3">
+                                    <i class="fas fa-car me-2"></i>Carro de Interesse
+                                </h4>
+                                
+                                {% if not carro %}
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        {{ form.carro_interesse.label_tag }}
+                                        {{ form.carro_interesse }}
+                                        {% if form.carro_interesse.errors %}
+                                            <div class="text-danger">
+                                                {% for error in form.carro_interesse.errors %}
+                                                    <small>{{ error }}</small><br>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                        <div class="form-text">Escolha um carro do nosso estoque</div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        {{ form.carro_texto.label_tag }}
+                                        {{ form.carro_texto }}
+                                        {% if form.carro_texto.errors %}
+                                            <div class="text-danger">
+                                                {% for error in form.carro_texto.errors %}
+                                                    <small>{{ error }}</small><br>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                        <div class="form-text">Se não encontrou na lista, descreva aqui</div>
+                                    </div>
+                                </div>
+                                {% else %}
+                                <div class="alert alert-success">
+                                    <i class="fas fa-check-circle me-2"></i>
+                                    Carro selecionado: <strong>{{ carro.fabricante }} {{ carro.modelo }} {{ carro.ano }}</strong>
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Observações -->
+                            <div class="form-section mb-4">
+                                <h4 class="text-danger mb-3">
+                                    <i class="fas fa-comment me-2"></i>Observações
+                                </h4>
+                                
+                                <div class="mb-3">
+                                    {{ form.observacoes.label_tag }}
+                                    {{ form.observacoes }}
+                                    {% if form.observacoes.errors %}
+                                        <div class="text-danger">
+                                            {% for error in form.observacoes.errors %}
+                                                <small>{{ error }}</small><br>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                    <div class="form-text">Conte-nos mais sobre suas necessidades, prazo desejado, etc.</div>
+                                </div>
+                            </div>
+
+                            <!-- Informações Importantes -->
+                            <div class="alert alert-info">
+                                <h5 class="alert-heading">
+                                    <i class="fas fa-info-circle me-2"></i>Informações Importantes
+                                </h5>
+                                <ul class="mb-0">
+                                    <li>O financiamento está sujeito à aprovação de crédito</li>
+                                    <li>Documentação necessária será solicitada após pré-aprovação</li>
+                                    <li>Taxa de juros varia conforme perfil de crédito</li>
+                                    <li>Resposta em até 24 horas úteis</li>
+                                </ul>
+                            </div>
+
+                            <!-- Botão de Envio -->
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-danger btn-lg">
+                                    <i class="fas fa-calculator me-2"></i>Solicitar Financiamento
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Simulação de Financiamento -->
+        <div class="row mt-5" id="simulacao-section" style="display: none;">
+            <div class="col-12">
+                <h3 class="text-center mb-4 text-danger">
+                    <i class="fas fa-calculator me-2"></i>Simulação do Seu Financiamento
+                </h3>
+            </div>
+        </div>
+        
+        <div class="row justify-content-center" id="simulacao-content" style="display: none;">
+            <div class="col-lg-10">
+                <div class="card border-danger">
+                    <div class="card-header bg-danger text-white">
+                        <h5 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Dados da Simulação</h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Primeira linha: Dados principais em 2 blocos -->
+                        <div class="row mb-4">
+                            <!-- Bloco 1: Informações do Veículo -->
+                            <div class="col-md-6">
+                                <div class="card h-100 border-light bg-light">
+                                    <div class="card-body text-center">
+                                        <h6 class="card-title text-danger mb-3">
+                                            <i class="fas fa-car me-2"></i>Informações do Veículo
+                                        </h6>
+                                        <div class="row">
+                                            <div class="col-12 mb-2">
+                                                <strong>Veículo:</strong>
+                                                <div class="text-muted" id="sim-veiculo">-</div>
+                                            </div>
+                                            <div class="col-12 mb-2">
+                                                <strong>Valor do Veículo:</strong>
+                                                <div class="text-success fs-5" id="sim-valor-veiculo">R$ -</div>
+                                            </div>
+                                            <div class="col-12">
+                                                <strong>Valor da Entrada:</strong>
+                                                <div class="text-primary" id="sim-entrada">R$ -</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Bloco 2: Informações do Financiamento -->
+                            <div class="col-md-6">
+                                <div class="card h-100 border-light bg-light">
+                                    <div class="card-body text-center">
+                                        <h6 class="card-title text-danger mb-3">
+                                            <i class="fas fa-percentage me-2"></i>Dados do Financiamento
+                                        </h6>
+                                        <div class="row">
+                                            <div class="col-12 mb-2">
+                                                <strong>Valor Financiado:</strong>
+                                                <div class="text-warning fs-5" id="sim-valor-financiado">R$ -</div>
+                                            </div>
+                                            <div class="col-12 mb-2">
+                                                <strong>Prazo Estimado:</strong>
+                                                <div class="text-info" id="sim-prazo">36 meses</div>
+                                            </div>
+                                            <div class="col-12">
+                                                <strong>Taxa Estimada:</strong>
+                                                <div class="text-secondary" id="sim-taxa">1.99% a.m.</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Segunda linha: Resultado da parcela centralizado -->
+                        <div class="row justify-content-center">
+                            <div class="col-md-8">
+                                <div class="card border-success bg-success text-white">
+                                    <div class="card-body text-center">
+                                        <h5 class="card-title mb-2">
+                                            <i class="fas fa-money-bill-wave me-2"></i>Valor da Parcela
+                                        </h5>
+                                        <div class="display-6 fw-bold" id="sim-parcela">R$ -</div>
+                                        <small class="opacity-75">*Valor estimado sujeito à aprovação de crédito</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Terceira linha: Informações adicionais -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <div class="alert alert-warning">
+                                    <h6 class="alert-heading">
+                                        <i class="fas fa-exclamation-triangle me-2"></i>Importante
+                                    </h6>
+                                    <ul class="mb-0 small">
+                                        <li>Esta é uma simulação estimativa baseada em uma taxa média de mercado</li>
+                                        <li>A taxa final pode variar conforme análise de crédito e perfil do cliente</li>
+                                        <li>Simulação válida por 30 dias</li>
+                                        <li>Documentação e aprovação de crédito são obrigatórias</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vantagens do Financiamento -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <h3 class="text-center mb-4">Vantagens do Nosso Financiamento</h3>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-3 mb-4">
+                <div class="card text-center h-100">
+                    <div class="card-body">
+                        <i class="fas fa-percentage text-danger fa-2x mb-3"></i>
+                        <h5 class="card-title">Melhores Taxas</h5>
+                        <p class="card-text">Parcerias com principais bancos garantem as melhores condições do mercado.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-3 mb-4">
+                <div class="card text-center h-100">
+                    <div class="card-body">
+                        <i class="fas fa-clock text-danger fa-2x mb-3"></i>
+                        <h5 class="card-title">Aprovação Rápida</h5>
+                        <p class="card-text">Processo ágil com resposta em até 24 horas úteis.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-3 mb-4">
+                <div class="card text-center h-100">
+                    <div class="card-body">
+                        <i class="fas fa-shield-alt text-danger fa-2x mb-3"></i>
+                        <h5 class="card-title">Segurança Total</h5>
+                        <p class="card-text">Processo 100% seguro com proteção de dados garantida.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-3 mb-4">
+                <div class="card text-center h-100">
+                    <div class="card-body">
+                        <i class="fas fa-handshake text-danger fa-2x mb-3"></i>
+                        <h5 class="card-title">Atendimento Personalizado</h5>
+                        <p class="card-text">Consultores especializados para encontrar a melhor solução.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Dados do carro para JavaScript -->
+{% if carro %}
+<script id="carro-data" type="application/json">
+{
+    "preco": {{ carro.preco|default:50000 }},
+    "nome": "{{ carro.fabricante|escapejs }} {{ carro.modelo|escapejs }} {{ carro.ano }}"
+}
+</script>
+{% endif %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.body.setAttribute('data-page', 'financiamento');
+    
+    // Validação de CPF
+    function validateCPF(cpf) {
+        cpf = cpf.replace(/[^\d]+/g,'');
+        if(cpf == '') return false;
+        if (cpf.length != 11 || 
+            cpf == "00000000000" || 
+            cpf == "11111111111" || 
+            cpf == "22222222222" || 
+            cpf == "33333333333" || 
+            cpf == "44444444444" || 
+            cpf == "55555555555" || 
+            cpf == "66666666666" || 
+            cpf == "77777777777" || 
+            cpf == "88888888888" || 
+            cpf == "99999999999")
+            return false;
+        
+        let add = 0;
+        for (let i=0; i < 9; i ++)
+            add += parseInt(cpf.charAt(i)) * (10 - i);
+        let rev = 11 - (add % 11);
+        if (rev == 10 || rev == 11)
+            rev = 0;
+        if (rev != parseInt(cpf.charAt(9)))
+            return false;
+        
+        add = 0;
+        for (let i = 0; i < 10; i ++)
+            add += parseInt(cpf.charAt(i)) * (11 - i);
+        rev = 11 - (add % 11);
+        if (rev == 10 || rev == 11)
+            rev = 0;
+        if (rev != parseInt(cpf.charAt(10)))
+            return false;
+        return true;
+    }
+    
+    // Máscara para CPF
+    const cpfInput = document.querySelector('input[name="cpf"]');
+    if (cpfInput) {
+        cpfInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            value = value.replace(/(\d{3})(\d)/, '$1.$2');
+            value = value.replace(/(\d{3})(\d)/, '$1.$2');
+            value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+            e.target.value = value;
+        });
+        
+        cpfInput.addEventListener('blur', function(e) {
+            if (!validateCPF(e.target.value)) {
+                e.target.setCustomValidity('CPF inválido');
+                e.target.classList.add('is-invalid');
+            } else {
+                e.target.setCustomValidity('');
+                e.target.classList.remove('is-invalid');
+            }
+        });
+    }
+    
+    // Máscara para telefone
+    const phoneInput = document.querySelector('input[name="telefone"]');
+    if (phoneInput) {
+        phoneInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length <= 10) {
+                value = value.replace(/(\d{2})(\d)/, '($1) $2');
+                value = value.replace(/(\d{4})(\d)/, '$1-$2');
+            } else {
+                value = value.replace(/(\d{2})(\d)/, '($1) $2');
+                value = value.replace(/(\d{5})(\d)/, '$1-$2');
+            }
+            e.target.value = value;
+        });
+    }
+    
+    // Funcionalidade de Simulação de Financiamento
+    function calcularSimulacao() {
+        const carroSelect = document.querySelector('[name="carro_interesse"]');
+        const carroTexto = document.querySelector('[name="carro_texto"]');
+        const entrada = document.querySelector('[name="entrada"]');
+        
+        let valorVeiculo = 0;
+        let nomeVeiculo = '';
+        
+        // Determinar valor e nome do veículo
+        if (carroSelect && carroSelect.value) {
+            const selectedOption = carroSelect.options[carroSelect.selectedIndex];
+            if (selectedOption.dataset && selectedOption.dataset.preco) {
+                valorVeiculo = parseFloat(selectedOption.dataset.preco);
+                nomeVeiculo = selectedOption.text;
+            }
+        } else if (carroTexto && carroTexto.value.trim()) {
+            nomeVeiculo = carroTexto.value.trim();
+            valorVeiculo = 50000; // Valor padrão para simulação
+        }
+        
+        // Verificar se há dados do carro via Django
+        const carroDataScript = document.getElementById('carro-data');
+        if (carroDataScript) {
+            const carroData = JSON.parse(carroDataScript.textContent);
+            valorVeiculo = carroData.preco;
+            nomeVeiculo = carroData.nome;
+        }
+        
+        let valorEntrada = 0;
+        if (entrada && entrada.value) {
+            const entradaLimpa = entrada.value.replace(/[R$\s.]/g, '').replace(',', '.');
+            valorEntrada = parseFloat(entradaLimpa) || 0;
+        }
+        
+        const prazoMeses = 36; // Padrão
+        
+        // Só exibe simulação se tiver dados mínimos
+        if (valorVeiculo > 0 && nomeVeiculo) {
+            const valorFinanciado = valorVeiculo - valorEntrada;
+            const taxaMensal = 1.99; // 1.99% a.m. (taxa estimada)
+            const taxaDecimal = taxaMensal / 100;
+            
+            // Calcular parcela usando fórmula Price
+            let valorParcela = 0;
+            if (valorFinanciado > 0) {
+                const fator = Math.pow(1 + taxaDecimal, prazoMeses);
+                valorParcela = valorFinanciado * (taxaDecimal * fator) / (fator - 1);
+            }
+            
+            // Atualizar elementos da simulação
+            document.getElementById('sim-veiculo').textContent = nomeVeiculo;
+            document.getElementById('sim-valor-veiculo').textContent = formatMoney(valorVeiculo);
+            document.getElementById('sim-entrada').textContent = formatMoney(valorEntrada);
+            document.getElementById('sim-valor-financiado').textContent = formatMoney(valorFinanciado);
+            document.getElementById('sim-parcela').textContent = formatMoney(valorParcela);
+            
+            // Mostrar seção de simulação
+            document.getElementById('simulacao-section').style.display = 'block';
+            document.getElementById('simulacao-content').style.display = 'block';
+            
+            // Scroll suave para a simulação
+            setTimeout(() => {
+                document.getElementById('simulacao-section').scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }, 100);
+        }
+    }
+    
+    // Função para formatar valores monetários
+    function formatMoney(value) {
+        if (isNaN(value) || value === 0) return 'R$ 0,00';
+        return 'R$ ' + value.toLocaleString('pt-BR', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    }
+    
+    // Adicionar listeners para atualizar simulação
+    const simFields = ['carro_interesse', 'carro_texto', 'entrada'];
+    simFields.forEach(fieldName => {
+        const field = document.querySelector(`[name="${fieldName}"]`);
+        if (field) {
+            field.addEventListener('change', calcularSimulacao);
+            field.addEventListener('input', debounce(calcularSimulacao, 500));
+        }
+    });
+    
+    // Função debounce para evitar muitas chamadas
+    function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+    
+    // Calcular simulação inicial se há dados
+    setTimeout(calcularSimulacao, 500);
+});
+</script>
+{% endblock %}

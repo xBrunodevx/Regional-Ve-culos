@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Estoque - Regional Veículos{% endblock %}
+
+{% block content %}
+<section class="section" data-page="estoque">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="section-title">Nosso Estoque</h1>
+                <p class="section-subtitle">Encontre o carro ideal para você</p>
+            </div>
+        </div>
+
+        <!-- Filtros -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <form method="GET" class="filter-form">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <select name="fabricante" class="form-control">
+                                        <option value="">Todas as marcas</option>
+                                        {% for fabricante in fabricantes %}
+                                        <option value="{{ fabricante }}" {% if filtros.fabricante == fabricante %}selected{% endif %}>
+                                            {{ fabricante }}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <select name="condicao" class="form-control">
+                                        <option value="">Todas as condições</option>
+                                        <option value="novo" {% if filtros.condicao == 'novo' %}selected{% endif %}>Novo</option>
+                                        <option value="seminovo" {% if filtros.condicao == 'seminovo' %}selected{% endif %}>Seminovo</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="number" name="preco_min" class="form-control" placeholder="Preço mínimo" value="{{ filtros.preco_min }}">
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="number" name="preco_max" class="form-control" placeholder="Preço máximo" value="{{ filtros.preco_max }}">
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-danger me-2">
+                                        <i class="fas fa-search"></i> Filtrar
+                                    </button>
+                                    <a href="{% url 'core:estoque' %}" class="btn btn-outline-secondary">
+                                        <i class="fas fa-times"></i> Limpar
+                                    </a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lista de Carros -->
+        <div class="row">
+            {% for carro in carros %}
+            <div class="col-12 col-md-6 col-lg-4 mb-4 d-flex align-items-stretch">
+                <div class="car-card w-100 h-100 d-flex flex-column">
+                    <div class="car-image text-center">
+                        {% if carro.imagem_principal %}
+                            <img src="{{ carro.imagem_principal.url }}" alt="{{ carro.modelo }}" class="img-fluid w-100" style="max-height:220px;object-fit:cover;">
+                        {% else %}
+                            <img src="{% static 'images/imgcar.jpg' %}" alt="{{ carro.modelo }}" class="img-fluid w-100" style="max-height:220px;object-fit:cover;">
+                        {% endif %}
+                        <div class="car-badge badge-{{ carro.condicao }}">
+                            {{ carro.get_condicao_display }}
+                        </div>
+                    </div>
+                    <div class="car-content flex-grow-1 d-flex flex-column justify-content-between">
+                        <h4 class="car-title">{{ carro.fabricante }} {{ carro.modelo }}</h4>
+                        <div class="car-price">{{ carro.get_preco_formatado }}</div>
+                        <ul class="car-details">
+                            <li><i class="fas fa-calendar"></i>{{ carro.ano }}</li>
+                            <li><i class="fas fa-palette"></i>{{ carro.cor }}</li>
+                            <li><i class="fas fa-road"></i>{{ carro.quilometragem|floatformat:0 }} km</li>
+                            <li><i class="fas fa-gas-pump"></i>{{ carro.combustivel }}</li>
+                        </ul>
+                        <div class="car-actions">
+                            <a href="{% url 'core:detalhe_carro' carro.pk %}" class="btn-custom btn-primary-custom">
+                                <i class="fas fa-eye me-1"></i>Saiba Mais
+                            </a>
+                            <a href="{% url 'contato:financiamento_carro' carro.pk %}" class="btn-custom btn-outline-custom">
+                                <i class="fas fa-calculator me-1"></i>Financiar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center">
+                <div class="alert alert-info">
+                    <h4>Nenhum carro encontrado</h4>
+                    <p>Não encontramos carros com os filtros selecionados. Tente ajustar os critérios de busca.</p>
+                    <a href="{% url 'core:estoque' %}" class="btn btn-danger">Ver todos os carros</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Paginação -->
+        {% if carros.has_other_pages %}
+        <div class="row">
+            <div class="col-12">
+                <nav aria-label="Navegação de páginas">
+                    <ul class="pagination">
+                        {% if carros.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?{% if request.GET.fabricante %}fabricante={{ request.GET.fabricante }}&{% endif %}{% if request.GET.condicao %}condicao={{ request.GET.condicao }}&{% endif %}{% if request.GET.preco_min %}preco_min={{ request.GET.preco_min }}&{% endif %}{% if request.GET.preco_max %}preco_max={{ request.GET.preco_max }}&{% endif %}page={{ carros.previous_page_number }}">
+                                <i class="fas fa-chevron-left"></i> Anterior
+                            </a>
+                        </li>
+                        {% endif %}
+
+                        {% for num in carros.paginator.page_range %}
+                        {% if carros.number == num %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ num }}</span>
+                        </li>
+                        {% elif num > carros.number|add:'-3' and num < carros.number|add:'3' %}
+                        <li class="page-item">
+                            <a class="page-link" href="?{% if request.GET.fabricante %}fabricante={{ request.GET.fabricante }}&{% endif %}{% if request.GET.condicao %}condicao={{ request.GET.condicao }}&{% endif %}{% if request.GET.preco_min %}preco_min={{ request.GET.preco_min }}&{% endif %}{% if request.GET.preco_max %}preco_max={{ request.GET.preco_max }}&{% endif %}page={{ num }}">{{ num }}</a>
+                        </li>
+                        {% endif %}
+                        {% endfor %}
+
+                        {% if carros.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?{% if request.GET.fabricante %}fabricante={{ request.GET.fabricante }}&{% endif %}{% if request.GET.condicao %}condicao={{ request.GET.condicao }}&{% endif %}{% if request.GET.preco_min %}preco_min={{ request.GET.preco_min }}&{% endif %}{% if request.GET.preco_max %}preco_max={{ request.GET.preco_max }}&{% endif %}page={{ carros.next_page_number }}">
+                                Próxima <i class="fas fa-chevron-right"></i>
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.body.setAttribute('data-page', 'estoque');
+});
+</script>
+{% endblock %}
