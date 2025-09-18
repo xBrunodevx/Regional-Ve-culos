@@ -1,3 +1,28 @@
+# Arquivos e pastas de backup, mídia e dados sensíveis
+db.sqlite3
+*.sqlite3
+*.json
+*.zip
+*.bak
+*.log
+media/
+backup_*/
+static_backup_atual/
+templates_backup_atual/
+backup_media_*/
+backup_staticfiles_*/
+.env
+.env.*
+
+# Arquivos de testes e debug
+*test*.py
+debug_form_detailed.py
+test_form.html
+
+# Arquivos de sistema
+Thumbs.db
+.DS_Store
+*.swp
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
