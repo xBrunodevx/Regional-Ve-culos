@@ -1,3 +1,62 @@
+/* Garantir botão de financiamento sempre vermelho (desktop e mobile) */
+.car-actions .btn-danger,
+.car-actions .btn-danger:focus,
+.car-actions .btn-danger:active,
+.car-actions .btn-danger:hover {
+    background-color: #dc3545 !important;
+    border-color: #dc3545 !important;
+    color: #fff !important;
+    box-shadow: none !important;
+}
+/* Forçar botão WhatsApp verde na página de contato */
+.social-links .btn-outline-success {
+    color: #25d366 !important;
+    border-color: #25d366 !important;
+    background-color: #fff !important;
+}
+.social-links .btn-outline-success:hover,
+.social-links .btn-outline-success:focus {
+    background-color: #25d366 !important;
+    color: #fff !important;
+    border-color: #25d366 !important;
+}
+@media (max-width: 768px) {
+    .social-links .btn {
+        margin-bottom: 0.5rem;
+        margin-right: 0 !important;
+        width: 100%;
+    }
+    .social-links .btn:last-child {
+        margin-bottom: 0;
+    }
+}
+@media (max-width: 768px) {
+    .cta-section {
+        width: 100vw;
+        max-width: 100vw;
+        margin-left: calc(-1 * (100vw - 100%) / 2) !important;
+        margin-right: calc(-1 * (100vw - 100%) / 2) !important;
+        border-radius: 0 !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+    .cta-buttons {
+        flex-direction: column;
+        gap: 16px;
+        align-items: center;
+    }
+}
+/* Espaçamento entre botões da página Sobre no mobile */
+@media (max-width: 768px) {
+    .sobre-btn-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+    .sobre-btn-group .btn {
+        width: 100%;
+    }
+}
 /* Regional Veículos - CSS Principal */
 
 /* Variáveis de Cores e Transições */
@@ -95,12 +154,13 @@ body {
     /* Remover completamente o padding para banner rente */
     body {
         padding-top: 0 !important; /* Removido completamente */
+        margin-top: -10px !important;
     }
     
     /* Subir ligeiramente o banner em mobile */
     .hero-section,
     .hero-section-responsive {
-        margin-top: -15px !important; /* Sobe o banner um pouquinho */
+        margin-top: -25px !important; /* Sobe o banner para nivelar com o menu */
         padding-top: 0 !important;
     }
     
@@ -195,7 +255,7 @@ body {
 @media (max-width: 480px) {
     .hero-section,
     .hero-section-responsive {
-        margin-top: -20px !important; /* Sobe um pouco mais em telas pequenas */
+        margin-top: -30px !important; /* Sobe mais em telas pequenas */
     }
 }
 
@@ -203,7 +263,7 @@ body {
 @media (max-width: 360px) {
     .hero-section,
     .hero-section-responsive {
-        margin-top: -25px !important; /* Sobe ainda mais em telas muito pequenas */
+        margin-top: -35px !important; /* Sobe ainda mais em telas muito pequenas */
     }
 }
 
@@ -483,6 +543,10 @@ body {
         max-width: 50%;
         text-align: right;
         z-index: 10;
+    }
+
+    .btn-danger {
+        padding: 10px 18px !important;
     }
     
     .typewriter-text {
