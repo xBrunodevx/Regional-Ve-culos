@@ -88,19 +88,25 @@ def detalhe_carro(request, pk):
 
 def sobre(request):
     """View da página sobre"""
-    # Buscar imagem da loja para a página sobre
-    imagem_loja = ImagemSite.objects.filter(
-        tipo='sobre_loja', 
-        ativo=True
-    ).order_by('ordem').first()
-    
-    context = {
-        'imagem_loja': imagem_loja,
-        'anos_experiencia': 15,
-        'carros_vendidos': 800,
-        'clientes_satisfeitos': 500,
-    }
-    return render(request, 'core/sobre.html', context)
+    import logging
+    logger = logging.getLogger(__name__)
+    try:
+        # Buscar imagem da loja para a página sobre
+        imagem_loja = ImagemSite.objects.filter(
+            tipo='sobre_loja', 
+            ativo=True
+        ).order_by('ordem').first()
+        context = {
+            'imagem_loja': imagem_loja,
+            'anos_experiencia': 15,
+            'carros_vendidos': 800,
+            'clientes_satisfeitos': 500,
+        }
+        return render(request, 'core/sobre.html', context)
+    except Exception as e:
+        logger.error(f"Erro na view sobre: {e}", exc_info=True)
+        # Opcional: renderizar uma página de erro customizada
+        return render(request, 'core/erro500.html', status=500)
 
 
 def buscar(request):
